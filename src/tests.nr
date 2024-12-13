@@ -5,8 +5,32 @@ use crate::sha256::{
 
 #[test]
 #[export]
-fn test_keccak256_0() -> [u8; 32] {
+fn test_sha256_0() -> [u8; 32] {
     sha256_var([], 0)
+}
+
+#[test]
+#[export]
+fn test_sha256_1(input: [u8; 1], len: u64) -> [u8; 32] {
+    sha256_var(input, len)
+}
+
+#[test]
+#[export]
+fn test_sha256_200(input: [u8; 200], len: u64) -> [u8; 32] {
+    sha256_var(input, len)
+}
+
+#[test]
+#[export]
+fn test_sha256_511(input: [u8; 511], len: u64) -> [u8; 32] {
+    sha256_var(input, len)
+}
+
+#[test]
+#[export]
+fn test_sha256_512(input: [u8; 512], len: u64) -> [u8; 32] {
+    sha256_var(input, len)
 }
 
 #[test]
