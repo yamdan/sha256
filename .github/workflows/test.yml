@@ -47,8 +47,14 @@ jobs:
         with:
           toolchain: ${{ matrix.toolchain }}
 
+      - name: Install Cargo
+        uses: actions-rs/toolchain@v1
+
       - name: Run Noir tests
         run: nargo test
+
+      - name: Run Cargo tests
+        run: cargo test
 
   format:
     runs-on: ubuntu-latest
