@@ -48,7 +48,15 @@ jobs:
           toolchain: ${{ matrix.toolchain }}
 
       - name: Install Cargo
-        uses: actions-rs/toolchain@v1
+        uses: dtolnay/rust-toolchain@1.74.1
+        with:
+          targets: x86_64-unknown-linux-gnu
+      
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          key: x86_64-unknown-linux-gnu
+          cache-on-failure: true
 
       - name: Run Noir tests
         run: nargo test
