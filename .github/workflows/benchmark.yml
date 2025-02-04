@@ -21,8 +21,10 @@ jobs:
 
       - name: Install bb
         run: |
-          npm install -g bbup
-          bbup -nv 0.36.0
+          curl -L https://raw.githubusercontent.com/AztecProtocol/aztec-packages/refs/heads/master/barretenberg/bbup/install | bash
+          echo "$HOME/.bb/" >> $GITHUB_PATH
+          ~/.bb/bbup -nv 0.36.0
+          sudo apt install -y libc++-dev
 
       - name: Build Noir benchmark programs
         run: nargo export
@@ -34,7 +36,7 @@ jobs:
 
       - name: Compare gates reports
         id: gates_diff
-        uses: noir-lang/noir-gates-diff@7e4ddaa91c69380f15ccba514eac17bc7432a8cc
+        uses: noir-lang/noir-gates-diff@dbe920a8dcc3370af4be4f702ca9cef29317bec1
         with:
           report: gates_report.json
           summaryQuantile: 0.9 # only display the 10% most significant circuit size diffs in the summary (defaults to 20%)
