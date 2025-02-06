@@ -169,14 +169,12 @@ unconstrained fn build_msg_block<let N: u32>(
     let mut msg_block: MSG_BLOCK = [0; INT_BLOCK_SIZE];
 
     // We insert `BLOCK_SIZE` bytes (or up to the end of the message)
-    let block_input = if msg_start + BLOCK_SIZE > message_size {
-        if message_size < msg_start {
-            // This function is sometimes called with `msg_start` past the end of the message.
-            // In this case we return an empty block and zero pointer to signal that the result should be ignored.
-            0
-        } else {
-            message_size - msg_start
-        }
+    let block_input = if message_size < msg_start {
+        // This function is sometimes called with `msg_start` past the end of the message.
+        // In this case we return an empty block and zero pointer to signal that the result should be ignored.
+        0
+    } else if message_size < msg_start + BLOCK_SIZE {
+        message_size - msg_start
     } else {
         BLOCK_SIZE
     };
@@ -384,10 +382,10 @@ fn make_item(b0: u8, b1: u8, b2: u8, b3: u8) -> u32 {
 // otherwise multiplies by 256.
 fn lshift8(item: u32, shifts: u8) -> u32 {
     if is_unconstrained() {
-        if item == 0 {
+        // Brillig wouldn't shift 0<<4 without overflow.
+        if shifts >= 4 {
             0
         } else {
-            // Brillig wouldn't shift 0<<4 without overflow.
             item << (8 * shifts)
         }
     } else {
