@@ -484,12 +484,16 @@ fn verify_msg_len(
     verify_msg_block_equals_last(msg_block, last_block, msg_byte_ptr);
 
     // We verify the message length was inserted correctly by reversing the byte decomposition.
-    let mut reconstructed_len: u64 = 0;
-    for i in INT_SIZE_PTR..INT_BLOCK_SIZE {
-        reconstructed_len = reconstructed_len * TWO_POW_32;
-        reconstructed_len = reconstructed_len + msg_block[i] as u64;
-    }
-    let len = 8 * message_size as u64;
+    std::static_assert(
+        INT_SIZE_PTR + 2 == INT_BLOCK_SIZE,
+        "INT_SIZE_PTR + 2 must equal INT_BLOCK_SIZE",
+    );
+    let reconstructed_len_hi = msg_block[INT_SIZE_PTR] as Field;
+    let reconstructed_len_lo = msg_block[INT_SIZE_PTR + 1] as Field;
+
+    let reconstructed_len: Field =
+        reconstructed_len_hi * TWO_POW_32 as Field + reconstructed_len_lo;
+    let len = 8 * (message_size as Field);
     assert_eq(reconstructed_len, len);
 }
 
