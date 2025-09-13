@@ -383,7 +383,7 @@ fn lshift8(item: u32, shifts: u32) -> u32 {
         if shifts >= 4 {
             0
         } else {
-            item << (8 * shifts)
+            item << (8 * shifts as u8) // add u8 casting for old noir v1.0.0-beta.8
         }
     } else {
         if shifts == 4 {
@@ -403,7 +403,7 @@ fn rshift8(item: u32, shifts: u32) -> u32 {
         if shifts >= 4 {
             0
         } else {
-            item >> (8 * shifts)
+            item >> (8 * shifts as u8) // add u8 casting for old noir v1.0.0-beta.8
         }
     } else {
         if shifts == 4 {
